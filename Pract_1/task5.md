@@ -9,7 +9,8 @@
 ### Код программы
 ```
 nano banner
-
+```
+```
 #!/bin/bash
 
 text=$*
@@ -27,14 +28,17 @@ echo "+${line}+"
 
 ```
 nano reg
-
+```
+```
 #!/bin/bash
 # 755 - Чтение, запись, исполнение - Владалец | Чтение, исполнение - Другие пользователи
 chmod 755 "$1"
 # Копируем команду в /usr/local/bin
 sudo cp "$1" /usr/local/bin/
+```
+```
+# Запуск программы:
 
-Запуск программы:
 chmod +x banner
 chmod +x reg
 ./reg banner
