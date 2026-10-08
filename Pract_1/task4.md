@@ -28,6 +28,8 @@ echo "Идентификаторы:"
 echo "$ident"
 ```
 ```
+# Запуск программы:
+
 chmod +x ident
 ./ident hello.c
 ```
