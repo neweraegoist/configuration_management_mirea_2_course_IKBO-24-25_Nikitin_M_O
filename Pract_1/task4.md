@@ -8,7 +8,8 @@ h hello include int main n printf return stdio void world
 ### Код программы
 ```
 nano hello.c
-
+```
+```
 #include <stdio.h>
 
 int main() {
@@ -16,16 +17,17 @@ int main() {
     return 0;
 }
 ```
-
 ```
 nano ident
-
+```
+```
 #!/bin/bash
 file="$1"
 ident=$(grep -o -E '\b[a-zA-Z]*\b' "$file" | sort -u)
 echo "Идентификаторы:"
 echo "$ident"
-
+```
+```
 chmod +x ident
 ./ident hello.c
 ```
