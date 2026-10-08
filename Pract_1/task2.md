@@ -21,3 +21,12 @@ sort -k2 -nr /etc/protocols | head -5
 sort -k2 -nr  — сортируем по 2-му столбцу, от большего к меньшему. 
 head -5  — берём первые 5 строк.
 ```
+
+## Результат вывода
+```
+rohc	 142	ROHC		# Robust Header Compression
+wesp	 141	WESP		# Wrapped Encapsulating Security Payload
+shim6	 140	Shim6		# Shim6 Protocol [RFC5533]
+hip	     139	HIP		    # Host Identity Protocol
+manet	 138			    # MANET Protocols [RFC5498]
+```
