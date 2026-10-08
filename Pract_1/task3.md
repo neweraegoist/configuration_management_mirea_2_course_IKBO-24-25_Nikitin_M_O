@@ -11,7 +11,8 @@
 ### Код программы
 ```
 nano banner
-
+```
+```
 #!/bin/bash
 
 text=$*
@@ -25,9 +26,9 @@ done
 echo "+${line}+"
 echo "| ${text} |"
 echo "+${line}+"
-
+```
+```
 chmod +x banner
-
 ./banner "Hello from RTU MIREA!"
 ```
 
