@@ -5,7 +5,8 @@
 ### Код программы
 ```
 nano comments
-
+```
+```
 #!/bin/bash
 
 for file in *.c *.js *.py; do
@@ -17,7 +18,8 @@ for file in *.c *.js *.py; do
         echo "Файл $file не начинается с комментария"
     fi
 done
-
+```
+```
 chmod +x comments
 ./comments
 ```
