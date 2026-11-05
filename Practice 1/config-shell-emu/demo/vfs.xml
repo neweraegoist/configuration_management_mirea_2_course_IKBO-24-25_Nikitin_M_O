@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vfs>
+    <dir name="home">
+        <dir name="user">
+            <dir name="documents">
+                <file name="readme.txt">Это текстовый файл в виртуальной системе.</file>
+                <file name="notes.txt">Заметки студента.</file>
+            </dir>
+            <file name="profile.json">{"name": "blessfloyd"}</file>
+        </dir>
+        <file name="welcome.txt">Добро пожаловать в VFS!</file>
+    </dir>
+    <dir name="etc">
+        <file name="config.ini">[settings]
+theme=dark</file>
+    </dir>
+    <file name="root_file.txt">Я лежу в самом корне.</file>
+</vfs>
