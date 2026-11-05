@@ -37,3 +37,18 @@ chmod +x run.sh run_tests.sh scripts/*.sh
 ```
 ./run_tests.sh
 ```
+## 4. Примеры использования
+Запуск стартового скрипта (эмулятор выполнит команды из файла и остановится при ошибке):
+```
+./run.sh --vfs demo/vfs.xml --script demo/stage2_script.txt
+```
+
+Пример работы в интерактивном режиме:
+```
+vfs:/$ ls
+etc/  home/  root_file.txt
+vfs:/$ cd home
+vfs:home$ ls
+user/  welcome.txt
+vfs:home$ exit
+```
