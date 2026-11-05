@@ -1,41 +1,60 @@
-"""Тесты для проверки первого этапа (REPL)."""
+"""Тесты этапа 1: REPL и разбор команд."""
+
 import io
 import sys
 import unittest
-from contextlib import redirect_stdout, redirect_stderr
+from contextlib import redirect_stderr
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+PROJECT_DIR = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(PROJECT_DIR / "src"))
 
-from emulator import ShellEmulator, CommandError
+from emulator import CommandError, ShellEmulator  # noqa: E402
+
 
 class TestParser(unittest.TestCase):
+    """Проверяет разбор обычных и заключённых в кавычки аргументов."""
+
     def setUp(self):
-        self.emu = ShellEmulator(vfs_path=None, script_path=None)
+        self.emulator = ShellEmulator(None, None)
 
-    def test_simple(self):
-        self.assertEqual(self.emu.parse("ls -la"), ("ls", ["-la"]))
+    def test_simple_command(self):
+        self.assertEqual(
+            self.emulator.parse("ls -la"),
+            ("ls", ["-la"]),
+        )
 
-    def test_quoted(self):
-        self.assertEqual(self.emu.parse('ls "my file"'), ("ls", ["my file"]))
+    def test_double_quoted_argument(self):
+        self.assertEqual(
+            self.emulator.parse('ls "my folder"'),
+            ("ls", ["my folder"]),
+        )
 
-    def test_unterminated(self):
+    def test_single_quoted_argument(self):
+        self.assertEqual(
+            self.emulator.parse("ls 'my folder'"),
+            ("ls", ["my folder"]),
+        )
+
+    def test_unterminated_quote(self):
         with self.assertRaises(CommandError):
-            self.emu.parse('ls "abc')
+            self.emulator.parse('ls "broken')
 
-class TestCommands(unittest.TestCase):
+
+class TestCommandErrors(unittest.TestCase):
+    """Проверяет обработку неизвестных команд."""
+
     def setUp(self):
-        self.emu = ShellEmulator(vfs_path=None, script_path=None)
-
-    def _run(self, line):
-        out, err = io.StringIO(), io.StringIO()
-        with redirect_stdout(out), redirect_stderr(err):
-            self.emu.execute(line)
-        return out.getvalue(), err.getvalue()
+        self.emulator = ShellEmulator(None, None)
 
     def test_unknown_command(self):
-        _, err = self._run("foo bar")
-        self.assertIn("command not found", err)
+        errors = io.StringIO()
+        with redirect_stderr(errors):
+            success = self.emulator.execute("unknown argument")
+
+        self.assertFalse(success)
+        self.assertIn("command not found", errors.getvalue())
+
 
 if __name__ == "__main__":
     unittest.main()
