@@ -1,5 +1,3 @@
-"""Тесты этапа 3: загрузка XML и работа с виртуальной ФС."""
-
 import io
 import sys
 import tempfile
@@ -17,7 +15,6 @@ VFS_FILE = PROJECT_DIR / "demo" / "vfs.xml"
 
 
 class TestVFSCommands(unittest.TestCase):
-    """Проверяет команды ls и cd на виртуальной файловой системе."""
 
     def setUp(self):
         self.emulator = ShellEmulator(str(VFS_FILE), None)
@@ -68,7 +65,6 @@ class TestVFSCommands(unittest.TestCase):
 
 
 class TestXMLValidation(unittest.TestCase):
-    """Проверяет ошибки загрузки XML-файлов VFS."""
 
     def load_temporary_xml(self, xml_text):
         temporary_dir = tempfile.TemporaryDirectory()
