@@ -1,5 +1,3 @@
-"""Модуль виртуальной файловой системы (VFS)."""
-
 from __future__ import annotations
 
 import xml.etree.ElementTree as ET
@@ -8,7 +6,6 @@ from typing import Optional
 
 
 class VFSNode:
-    """Узел виртуальной файловой системы: каталог или файл."""
 
     def __init__(
         self,
@@ -31,7 +28,6 @@ class VirtualFileSystem:
         self.cwd = self.root
 
     def load_from_xml(self, xml_path: str) -> None:
-        """Загружает дерево VFS из XML без изменения исходного файла."""
         path = Path(xml_path)
 
         try:
@@ -57,7 +53,6 @@ class VirtualFileSystem:
         parent_node: VFSNode,
         xml_element: ET.Element,
     ) -> None:
-        """Проверяет XML-узлы и добавляет их в дерево VFS."""
         for child in xml_element:
             if child.tag not in {"dir", "file"}:
                 raise ValueError(
@@ -89,7 +84,6 @@ class VirtualFileSystem:
                 node.content = child.text or ""
 
     def get_node(self, path: str) -> Optional[VFSNode]:
-        """Находит узел по абсолютному или относительному пути."""
         if not path or path == ".":
             return self.cwd
 
