@@ -1,5 +1,3 @@
-"""Эмулятор оболочки. Реализованы этапы 1–3 варианта №16."""
-
 from __future__ import annotations
 
 import argparse
@@ -44,11 +42,9 @@ class ShellEmulator:
         }
 
     def prompt(self) -> str:
-        """Формирует приглашение с именем VFS и текущего каталога."""
         return f"{self.vfs_name}:{self.vfs.cwd.name}$ "
 
     def _read_line(self) -> str:
-        """Считывает команду и отображает ввод при запуске через pipe."""
         if sys.stdin.isatty():
             return input(self.prompt())
 
@@ -63,7 +59,6 @@ class ShellEmulator:
         return raw_line.rstrip("\r\n")
 
     def parse(self, line: str) -> tuple[Optional[str], list[str]]:
-        """Разбирает строку, сохраняя аргументы в кавычках единым словом."""
         try:
             tokens = shlex.split(line, posix=True)
         except ValueError as exc:
@@ -74,7 +69,6 @@ class ShellEmulator:
         return tokens[0], tokens[1:]
 
     def execute(self, line: str) -> bool:
-        """Выполняет одну команду и возвращает признак успеха."""
         try:
             command, args = self.parse(line)
         except CommandError as exc:
@@ -101,7 +95,6 @@ class ShellEmulator:
         return True
 
     def cmd_ls(self, args: list[str]) -> None:
-        """Выводит содержимое каталога или имя указанного файла VFS."""
         if len(args) > 1:
             raise CommandError("too many arguments")
 
@@ -125,7 +118,6 @@ class ShellEmulator:
             print(f"{item.name}{suffix}")
 
     def cmd_cd(self, args: list[str]) -> None:
-        """Меняет текущий каталог внутри VFS."""
         if len(args) > 1:
             raise CommandError("too many arguments")
 
@@ -139,7 +131,6 @@ class ShellEmulator:
         self.vfs.cwd = node
 
     def cmd_exit(self, args: list[str]) -> None:
-        """Завершает работу эмулятора с указанным кодом выхода."""
         if len(args) > 1:
             raise CommandError("too many arguments")
 
@@ -159,7 +150,6 @@ class ShellEmulator:
         self.running = False
 
     def run_script(self) -> None:
-        """Выполняет скрипт и прекращает его после первой ошибки или exit."""
         if not self.script_path:
             return
 
@@ -191,7 +181,6 @@ class ShellEmulator:
             self.running = False
 
     def run(self) -> int:
-        """Запускает интерактивный режим или стартовый скрипт."""
         if self.script_path:
             self.run_script()
             return self.exit_code
@@ -212,7 +201,6 @@ class ShellEmulator:
 
 
 def main() -> int:
-    """Разбирает параметры запуска и запускает эмулятор."""
     parser = argparse.ArgumentParser(
         description="Эмулятор командной строки, вариант №16"
     )
@@ -240,7 +228,6 @@ def main() -> int:
         return 1
 
     return emulator.run()
-
 
 if __name__ == "__main__":
     sys.exit(main())
