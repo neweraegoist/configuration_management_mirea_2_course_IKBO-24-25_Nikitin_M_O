@@ -4,7 +4,7 @@
         <dir name="user">
             <dir name="documents">
                 <file name="readme.txt">Это текстовый файл в виртуальной системе.</file>
-                <file name="notes.txt">Заметки студента.</file>
+                <file name="notes.txt">Заметки.</file>
             </dir>
             <file name="profile.json">{"name": "blessfloyd"}</file>
         </dir>
