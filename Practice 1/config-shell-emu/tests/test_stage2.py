@@ -1,5 +1,3 @@
-"""Тесты этапа 2: параметры запуска и стартовый скрипт."""
-
 import io
 import sys
 import tempfile
@@ -16,7 +14,6 @@ VFS_FILE = PROJECT_DIR / "demo" / "vfs.xml"
 
 
 class TestStage2(unittest.TestCase):
-    """Проверяет запуск стартового скрипта."""
 
     def test_script_stops_on_first_error(self):
         with tempfile.TemporaryDirectory() as temp_dir:
