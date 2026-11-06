@@ -21,7 +21,6 @@ class VFSNode:
 
 
 class VirtualFileSystem:
-    """Хранит дерево VFS в оперативной памяти."""
 
     def __init__(self) -> None:
         self.root = VFSNode("/", True)
