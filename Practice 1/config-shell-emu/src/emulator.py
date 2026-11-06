@@ -18,7 +18,6 @@ class CommandError(Exception):
 
 
 class ShellEmulator:
-    """Консольный эмулятор командной строки с виртуальной ФС."""
 
     def __init__(
         self,
@@ -216,9 +215,9 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    print("[DEBUG] Параметры запуска эмулятора:")
-    print(f"[DEBUG] VFS: {args.vfs}")
-    print(f"[DEBUG] Script: {args.script}")
+    print("Параметры запуска эмулятора:")
+    print(f"VFS: {args.vfs}")
+    print(f"Script: {args.script}")
     print("-" * 30)
 
     try:
