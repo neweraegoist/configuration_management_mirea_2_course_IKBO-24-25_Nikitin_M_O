@@ -1,5 +1,3 @@
-"""Тесты этапа 1: REPL и разбор команд."""
-
 import io
 import sys
 import unittest
@@ -13,7 +11,6 @@ from emulator import CommandError, ShellEmulator  # noqa: E402
 
 
 class TestParser(unittest.TestCase):
-    """Проверяет разбор обычных и заключённых в кавычки аргументов."""
 
     def setUp(self):
         self.emulator = ShellEmulator(None, None)
@@ -42,7 +39,6 @@ class TestParser(unittest.TestCase):
 
 
 class TestCommandErrors(unittest.TestCase):
-    """Проверяет обработку неизвестных команд."""
 
     def setUp(self):
         self.emulator = ShellEmulator(None, None)
