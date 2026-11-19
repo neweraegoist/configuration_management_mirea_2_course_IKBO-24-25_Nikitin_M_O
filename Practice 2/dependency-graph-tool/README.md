@@ -147,11 +147,9 @@ variant16-dependency-graph-tool/
 │   ├── visualize.py
 │   └── main.py
 ├── tests/
-├── examples/
-│   ├── errors/
-│   └── results/
-├── ИНСТРУКЦИЯ_GITHUB.md
-└── ПОДГОТОВКА_К_ЗАЩИТЕ.md
+└── examples/
+    ├── errors/
+    └── results/
 ```
 
 ## 9. Ограничения разбора Maven
