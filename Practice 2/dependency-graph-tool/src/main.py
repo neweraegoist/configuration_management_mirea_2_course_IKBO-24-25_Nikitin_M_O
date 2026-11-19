@@ -127,8 +127,8 @@ def run(config_path: str, stage: int, compare: bool = False) -> int:
     """Запускает программу и показывает понятные сообщения об ошибках."""
     try:
         config = load_config(config_path)
-        config.print_params()
         if stage == STAGE_CONFIG:
+            config.print_params()
             return EXIT_SUCCESS
         root, get_deps = make_resolver(config)
         return _run_stage(stage, root, get_deps, config, compare)
