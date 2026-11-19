@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <package_name>A</package_name>
+    <repository>test_repo_simple.txt</repository>
+    <test_mode>true</test_mode>
+    <version>1.0</version>
+    <ascii_tree>true</ascii_tree>
+    <max_depth>10</max_depth>
+</config>

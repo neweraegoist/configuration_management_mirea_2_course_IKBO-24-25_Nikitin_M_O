@@ -1,0 +1,6 @@
+# A long chain for checking max_depth.
+A: B
+B: C
+C: D
+D: E
+E:
