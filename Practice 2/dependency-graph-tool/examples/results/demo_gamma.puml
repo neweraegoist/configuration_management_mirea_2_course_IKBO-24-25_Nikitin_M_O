@@ -1,0 +1,13 @@
+@startuml
+left to right direction
+rectangle "X" as N0
+rectangle "Z" as N1
+rectangle "Y" as N2
+rectangle "Q" as N3
+rectangle "R" as N4
+N0 --> N2
+N0 --> N1
+N1 --> N0
+N1 --> N4
+N2 --> N3
+@enduml
