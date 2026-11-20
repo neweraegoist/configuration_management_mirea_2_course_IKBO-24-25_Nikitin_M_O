@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import os
 import re
-import xml.etree.ElementTree as ET
+from xml.etree.ElementTree import Element, ParseError, parse
 from dataclasses import dataclass
 from urllib.parse import urlsplit
 
@@ -33,7 +33,7 @@ class Config:
             print(f"{key}={value}")
 
 
-def _tag_text(root: ET.Element, name: str) -> str:
+def _tag_text(root: Element, name: str) -> str:
     """Возвращает непустое значение обязательного XML-тега."""
     nodes = root.findall(name)
     if len(nodes) != ONE_REQUIRED_VALUE or nodes[0].text is None:
@@ -55,7 +55,8 @@ def _boolean(name: str, value: str) -> bool:
 def _depth(value: str) -> int:
     """Проверяет и возвращает неотрицательную глубину графа."""
     if not value.isdigit():
-        raise ConfigError("Параметр <max_depth> должен быть целым числом >= 0.")
+        raise ConfigError(
+            "Параметр <max_depth> должен быть целым числом >= 0.")
     return int(value)
 
 
@@ -84,13 +85,13 @@ def _repository_path(value: str, config_path: str) -> str:
     return os.path.normpath(os.path.join(folder, value))
 
 
-def _read_root(path: str) -> ET.Element:
+def _read_root(path: str) -> Element:
     """Открывает XML и проверяет его корневой элемент."""
     if not os.path.isfile(path):
         raise ConfigError(f"Файл конфигурации не найден: {path}")
     try:
-        root = ET.parse(path).getroot()
-    except (ET.ParseError, OSError) as error:
+        root = parse(path).getroot()
+    except (ParseError, OSError) as error:
         raise ConfigError(f"Не удалось прочитать XML: {error}") from error
     if root.tag != "config":
         raise ConfigError("Корневой XML-тег должен называться <config>.")

@@ -67,7 +67,6 @@ def build_graph(
         node, depth = stack.pop()
         if node in best_depth and best_depth[node] <= depth:
             continue
-        # Короткий путь позволяет раскрыть больше уровней зависимостей.
         best_depth[node] = depth
         graph.setdefault(node, [])
         if depth >= max_depth:

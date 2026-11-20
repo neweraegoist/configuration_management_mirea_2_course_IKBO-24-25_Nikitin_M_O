@@ -1,0 +1,25 @@
+[tool.pytest.ini_options]
+testpaths = [
+    "Practice 1/config-shell-emu/tests",
+    "Practice 2/dependency-graph-tool/tests",
+]
+pythonpath = [
+    "Practice 1/config-shell-emu/src",
+    "Practice 2/dependency-graph-tool/src",
+]
+
+[tool.ruff]
+target-version = "py39"
+line-length = 79
+
+[tool.ruff.lint]
+select = ["E", "F", "N", "D", "C90"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.lint.pydocstyle]
+convention = "pep257"
+
+[tool.ruff.lint.per-file-ignores]
+"Practice 1/config-shell-emu/tests/test_stage*.py" = ["E402"]

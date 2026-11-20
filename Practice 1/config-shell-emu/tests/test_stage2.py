@@ -1,3 +1,5 @@
+"""Проверка выполнения стартового файла эмулятора."""
+
 import io
 import sys
 import tempfile
@@ -8,14 +10,16 @@ from pathlib import Path
 PROJECT_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_DIR / "src"))
 
-from emulator import ShellEmulator  # noqa: E402
+from emulator import ShellEmulator
 
 VFS_FILE = PROJECT_DIR / "demo" / "vfs.xml"
 
 
 class TestStage2(unittest.TestCase):
+    """Проверяет остановку и завершение стартового скрипта."""
 
     def test_script_stops_on_first_error(self):
+        """Прерывает скрипт после первой ошибки."""
         with tempfile.TemporaryDirectory() as temp_dir:
             script_path = Path(temp_dir) / "test_script.txt"
             script_path.write_text(
@@ -35,6 +39,7 @@ class TestStage2(unittest.TestCase):
         self.assertIn("command not found", errors.getvalue())
 
     def test_exit_stops_script_without_running_next_line(self):
+        """Завершает скрипт после exit без выполнения следующих строк."""
         with tempfile.TemporaryDirectory() as temp_dir:
             script_path = Path(temp_dir) / "exit_script.txt"
             script_path.write_text(
@@ -54,6 +59,7 @@ class TestStage2(unittest.TestCase):
         self.assertEqual(errors.getvalue(), "")
 
     def test_missing_script_returns_error(self):
+        """Возвращает ошибку при отсутствии стартового файла."""
         emulator = ShellEmulator(
             str(VFS_FILE),
             str(PROJECT_DIR / "demo" / "missing_script.txt"),

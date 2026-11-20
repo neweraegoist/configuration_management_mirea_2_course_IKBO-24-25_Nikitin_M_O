@@ -76,7 +76,8 @@ def _print_order(order: list[str]) -> None:
 def _compare(root: str, config: Config, order: list[str]) -> None:
     """Сравнивает граф с реальным выводом Maven CLI."""
     if config.test_mode:
-        raise MavenError("Сравнение с Maven доступно только в реальном режиме.")
+        raise MavenError(
+            "Сравнение с Maven доступно только в реальном режиме.")
     package = MavenPackage.parse(root)
     result, only_ours, only_maven = compare_with_maven(
         package, config.repository, order)

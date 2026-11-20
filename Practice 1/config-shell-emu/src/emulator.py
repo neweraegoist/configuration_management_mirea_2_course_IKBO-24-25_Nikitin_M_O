@@ -1,3 +1,5 @@
+"""Эмулятор командной строки с виртуальной файловой системой."""
+
 from __future__ import annotations
 
 import argparse
@@ -18,12 +20,14 @@ class CommandError(Exception):
 
 
 class ShellEmulator:
+    """Разбирает команды и выполняет их в памяти или из стартового файла."""
 
     def __init__(
         self,
         vfs_path: Optional[str],
         script_path: Optional[str],
     ) -> None:
+        """Загружает VFS и регистрирует поддерживаемые команды."""
         self.vfs = VirtualFileSystem()
         self.vfs_name = DEFAULT_VFS_NAME
 
@@ -41,9 +45,11 @@ class ShellEmulator:
         }
 
     def prompt(self) -> str:
+        """Возвращает приглашение с именами VFS и текущего каталога."""
         return f"{self.vfs_name}:{self.vfs.cwd.name}$ "
 
     def _read_line(self) -> str:
+        """Читает команду с приглашением из терминала или потока."""
         if sys.stdin.isatty():
             return input(self.prompt())
 
@@ -58,6 +64,7 @@ class ShellEmulator:
         return raw_line.rstrip("\r\n")
 
     def parse(self, line: str) -> tuple[Optional[str], list[str]]:
+        """Разбирает команду и аргументы с учётом кавычек."""
         try:
             tokens = shlex.split(line, posix=True)
         except ValueError as exc:
@@ -68,6 +75,7 @@ class ShellEmulator:
         return tokens[0], tokens[1:]
 
     def execute(self, line: str) -> bool:
+        """Выполняет команду и возвращает признак успешного завершения."""
         try:
             command, args = self.parse(line)
         except CommandError as exc:
@@ -94,6 +102,7 @@ class ShellEmulator:
         return True
 
     def cmd_ls(self, args: list[str]) -> None:
+        """Выводит имя файла или отсортированное содержимое каталога."""
         if len(args) > 1:
             raise CommandError("too many arguments")
 
@@ -117,6 +126,7 @@ class ShellEmulator:
             print(f"{item.name}{suffix}")
 
     def cmd_cd(self, args: list[str]) -> None:
+        """Меняет текущий каталог после проверки аргументов и пути."""
         if len(args) > 1:
             raise CommandError("too many arguments")
 
@@ -130,6 +140,7 @@ class ShellEmulator:
         self.vfs.cwd = node
 
     def cmd_exit(self, args: list[str]) -> None:
+        """Завершает эмулятор с кодом от 0 до 255."""
         if len(args) > 1:
             raise CommandError("too many arguments")
 
@@ -149,6 +160,7 @@ class ShellEmulator:
         self.running = False
 
     def run_script(self) -> None:
+        """Выполняет строки файла до первой ошибки или команды exit."""
         if not self.script_path:
             return
 
@@ -180,6 +192,7 @@ class ShellEmulator:
             self.running = False
 
     def run(self) -> int:
+        """Запускает стартовый файл или интерактивный цикл команд."""
         if self.script_path:
             self.run_script()
             return self.exit_code
@@ -200,6 +213,7 @@ class ShellEmulator:
 
 
 def main() -> int:
+    """Читает параметры запуска и возвращает код завершения эмулятора."""
     parser = argparse.ArgumentParser(
         description="Эмулятор командной строки, вариант №16"
     )

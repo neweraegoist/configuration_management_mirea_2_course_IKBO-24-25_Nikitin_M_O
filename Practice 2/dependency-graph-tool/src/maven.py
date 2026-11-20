@@ -6,7 +6,7 @@ import re
 import urllib.error
 import urllib.parse
 import urllib.request
-import xml.etree.ElementTree as ET
+from xml.etree.ElementTree import Element, ParseError, fromstring
 from dataclasses import dataclass
 
 EXPECTED_COORDINATE_PARTS = 3
@@ -53,22 +53,22 @@ def _local(tag: str) -> str:
     return tag.rsplit("}", 1)[-1]
 
 
-def _child(parent: ET.Element, name: str) -> ET.Element | None:
+def _child(parent: Element, name: str) -> Element | None:
     """Находит прямой дочерний XML-элемент по имени."""
     return next((item for item in parent if _local(item.tag) == name), None)
 
 
-def _text(parent: ET.Element, name: str) -> str:
+def _text(parent: Element, name: str) -> str:
     """Читает текст прямого дочернего XML-элемента."""
     node = _child(parent, name)
     return (node.text or "").strip() if node is not None else ""
 
 
-def _read_root(pom_text: str) -> ET.Element:
+def _read_root(pom_text: str) -> Element:
     """Преобразует текст POM в XML-дерево."""
     try:
-        return ET.fromstring(pom_text)
-    except ET.ParseError as error:
+        return fromstring(pom_text)
+    except ParseError as error:
         raise MavenError(f"Некорректный pom.xml: {error}") from error
 
 
@@ -87,7 +87,7 @@ def _resolve(value: str, props: dict[str, str]) -> str:
 
 
 def _properties(
-    root: ET.Element,
+    root: Element,
     pkg: MavenPackage,
     inherited: dict[str, str],
 ) -> dict[str, str]:
@@ -119,7 +119,7 @@ def _properties(
 
 
 def _managed_versions(
-    root: ET.Element, props: dict[str, str],
+    root: Element, props: dict[str, str],
 ) -> dict[str, str]:
     """Читает версии из dependencyManagement текущего POM."""
     result: dict[str, str] = {}
@@ -136,7 +136,7 @@ def _managed_versions(
     return result
 
 
-def _is_allowed(item: ET.Element, props: dict[str, str]) -> bool:
+def _is_allowed(item: Element, props: dict[str, str]) -> bool:
     """Отбрасывает необязательные и нерабочие области зависимостей."""
     scope = _resolve(_text(item, "scope") or "compile", props)
     optional = _resolve(_text(item, "optional") or "false", props)
@@ -145,7 +145,7 @@ def _is_allowed(item: ET.Element, props: dict[str, str]) -> bool:
 
 
 def _parse_dependency(
-    item: ET.Element,
+    item: Element,
     props: dict[str, str],
     managed: dict[str, str],
 ) -> MavenPackage | None:
@@ -163,7 +163,7 @@ def _parse_dependency(
 
 
 def _direct_dependencies(
-    root: ET.Element,
+    root: Element,
     props: dict[str, str],
     managed: dict[str, str],
 ) -> list[MavenPackage]:
@@ -181,7 +181,7 @@ def _direct_dependencies(
     return result
 
 
-def _parent_package(root: ET.Element) -> MavenPackage | None:
+def _parent_package(root: Element) -> MavenPackage | None:
     """Возвращает координаты родительского POM, если он задан."""
     parent = _child(root, "parent")
     if parent is None:
@@ -194,7 +194,7 @@ def _parent_package(root: ET.Element) -> MavenPackage | None:
 
 
 def _merge_context(
-    root: ET.Element,
+    root: Element,
     pkg: MavenPackage,
     parent: PomContext,
 ) -> PomContext:
@@ -266,5 +266,8 @@ def get_direct_dependencies(
     repository: str,
     pkg: MavenPackage,
 ) -> list[MavenPackage]:
-    """Получает зависимости с учётом свойств и зависимостей родительских POM."""
+    """Получает зависимости с учётом свойств и зависимостей родительских POM.
+
+    Обрабатывает цепочку наследования до загрузки зависимостей пакета.
+    """
     return _load_context(repository, pkg).dependencies

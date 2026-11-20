@@ -1,9 +1,10 @@
+"""Загрузка XML и поиск узлов виртуальной файловой системы."""
 
 from __future__ import annotations
 
-import xml.etree.ElementTree as element_tree
 from pathlib import Path
 from typing import Optional
+from xml.etree.ElementTree import Element, ParseError, parse
 
 
 class VFSNode:
@@ -15,6 +16,7 @@ class VFSNode:
         is_dir: bool,
         parent: Optional["VFSNode"] = None,
     ) -> None:
+        """Создаёт узел с пустыми содержимым и списком дочерних узлов."""
         self.name = name
         self.is_dir = is_dir
         self.parent = parent
@@ -26,6 +28,7 @@ class VirtualFileSystem:
     """Управляет виртуальными файлами и каталогами."""
 
     def __init__(self) -> None:
+        """Создаёт корневой каталог и устанавливает его текущим."""
         self.root = VFSNode("/", True)
         self.cwd = self.root
 
@@ -34,10 +37,10 @@ class VirtualFileSystem:
         path = Path(xml_path)
 
         try:
-            xml_tree = element_tree.parse(path)
+            xml_tree = parse(path)
         except FileNotFoundError as exc:
             raise ValueError(f"Файл VFS не найден: {xml_path}") from exc
-        except element_tree.ParseError as exc:
+        except ParseError as exc:
             raise ValueError(f"Неверный формат XML: {exc}") from exc
         except OSError as exc:
             raise ValueError(f"Не удалось прочитать VFS: {exc}") from exc
@@ -54,7 +57,7 @@ class VirtualFileSystem:
     def _parse_children(
         self,
         parent_node: VFSNode,
-        xml_element: element_tree.Element,
+        xml_element: Element,
     ) -> None:
         """Разбирает дочерние элементы XML."""
         for child in xml_element:
@@ -63,7 +66,7 @@ class VirtualFileSystem:
     def _validate_xml_child(
         self,
         parent_node: VFSNode,
-        child: element_tree.Element,
+        child: Element,
     ) -> tuple[str, bool]:
         """Проверяет XML-элемент и возвращает его имя и тип."""
         if child.tag not in {"dir", "file"}:
@@ -94,7 +97,7 @@ class VirtualFileSystem:
     def _add_xml_child(
         self,
         parent_node: VFSNode,
-        child: element_tree.Element,
+        child: Element,
     ) -> None:
         """Создаёт узел и добавляет его в виртуальную файловую систему."""
         name, is_dir = self._validate_xml_child(parent_node, child)
@@ -120,6 +123,8 @@ class VirtualFileSystem:
             if current is None:
                 return None
 
+        if path.endswith("/") and not current.is_dir:
+            return None
         return current
 
     def _start_node(self, path: str) -> VFSNode:
@@ -134,11 +139,11 @@ class VirtualFileSystem:
         part: str,
     ) -> Optional[VFSNode]:
         """Переходит к следующему элементу пути."""
-        if part == ".":
-            return current
-
         if not current.is_dir:
             return None
+
+        if part == ".":
+            return current
 
         if part == "..":
             if current.parent is not None:
