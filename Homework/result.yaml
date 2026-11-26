@@ -1,0 +1,7 @@
+network:
+  httpport: 8032
+  httpsport: 8064
+  workers: 32
+storage:
+  blockcount: 16.0
+  spareblocks: 3
